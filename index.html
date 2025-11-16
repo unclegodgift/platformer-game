@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Platformer</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Заголовок и статистика -->
+        <div class="game-header">
+            <h1 class="game-title">PIXEL PLATFORMER</h1>
+            <div class="game-stats">
+                <div class="stat-item" id="score">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">ОЧКИ</div>
+                </div>
+                <div class="stat-item" id="level">
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">УРОВЕНЬ</div>
+                </div>
+                <div class="stat-item" id="lives">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">ЖИЗНИ</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Панель управления -->
+        <div class="game-controls">
+            <button id="startBtn" class="btn btn-success">
+                <span class="btn-icon">▶️</span>
+                Старт
+            </button>
+            <button id="pauseBtn" class="btn btn-secondary">
+                <span class="btn-icon">⏸️</span>
+                Пауза
+            </button>
+            <button id="restartBtn" class="btn">
+                <span class="btn-icon">🔄</span>
+                Рестарт
+            </button>
+        </div>
+
+        <!-- Игровое поле -->
+        <div class="game-canvas-container">
+            <canvas id="gameCanvas" width="800" height="500"></canvas>
+        </div>
+
+        <!-- Инструкции -->
+        <div class="game-instructions">
+            <div class="instructions-title">🎮 УПРАВЛЕНИЕ</div>
+            <div class="controls-grid">
+                <div class="control-item">
+                    <div class="control-key">A</div>
+                    <div class="control-description">Движение влево</div>
+                </div>
+                <div class="control-item">
+                    <div class="control-key">D</div>
+                    <div class="control-description">Движение вправо</div>
+                </div>
+                <div class="control-item">
+                    <div class="control-key">W / ПРОБЕЛ</div>
+                    <div class="control-description">Прыжок</div>
+                </div>
+                <div class="control-item">
+                    <div class="control-key">P</div>
+                    <div class="control-description">Пауза</div>
+                </div>
+            </div>
+            
+            <!-- Прогресс сбора монет -->
+            <div class="progress-container">
+                <div class="coins-progress">
+                    <span>💰 Монеты:</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="coinsProgress" style="width: 0%"></div>
+                    </div>
+                    <span id="coinsText">0/0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран окончания игры -->
+        <div id="gameOver" class="game-over hidden">
+            <h2>ИГРА ОКОНЧЕНА!</h2>
+            <p>Ваш результат:</p>
+            <p class="final-score" id="finalScore">0</p>
+            <p>Соберите больше монет и пройдите все уровни!</p>
+            <button id="playAgainBtn" class="btn btn-success" style="margin-top: 20px;">
+                <span class="btn-icon">🎮</span>
+                Играть снова
+            </button>
+        </div>
+    </div>
+
+    <script src="js/Game.js"></script>
+    <script src="js/Player.js"></script>
+    <script src="js/Platform.js"></script>
+    <script src="js/Spike.js"></script>
+    <script src="js/Lava.js"></script>
+    <script src="js/Collision.js"></script>
+    <script src="js/InputHandler.js"></script>
+    <script src="js/Renderer.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
