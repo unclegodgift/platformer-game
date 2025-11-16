@@ -22,7 +22,7 @@
 - CSS3
 
 ## 🌐 Играть онлайн
-[Открыть игру на GitHub Pages](https://ВАШ_ЛОГИН.github.io/platformer-game)
+[Открыть игру на GitHub Pages](https://unclegodgift.github.io/platformer-game/)
 
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/9556b985-b2bd-4438-99f6-eec55eb93027" />
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/a42f5069-89b7-4211-8af9-aa8bc80d37ab" />
