@@ -11,7 +11,6 @@ class Game {
         this.lives = 3;
         this.maxLives = 3;
         
-        // Улучшенный игрок с новой физикой
         this.player = new Player(width / 2, height - 100, 30, 50);
         this.platforms = [];
         this.coins = [];
@@ -20,6 +19,305 @@ class Game {
         this.levelCompleted = false;
         
         this.levels = this.createLevels();
+        this.loadLevel(this.level - 1);
+    }
+
+    createLevels() {
+        return [
+            // Уровень 1 - обучающий (оставляем как есть)
+            {
+                platforms: [
+                    {x: 0, y: this.height - 50, width: this.width, height: 50},
+                    {x: 100, y: 350, width: 200, height: 20},
+                    {x: 350, y: 250, width: 150, height: 20},
+                    {x: 600, y: 300, width: 180, height: 20},
+                    {x: 200, y: 150, width: 120, height: 20},
+                    {x: 500, y: 100, width: 200, height: 20}
+                ],
+                coins: [
+                    {x: 150, y: 300, width: 15, height: 15, collected: false},
+                    {x: 400, y: 200, width: 15, height: 15, collected: false},
+                    {x: 650, y: 250, width: 15, height: 15, collected: false},
+                    {x: 250, y: 100, width: 15, height: 15, collected: false},
+                    {x: 550, y: 50, width: 15, height: 15, collected: false}
+                ],
+                spikes: [],
+                lava: [],
+                goal: {x: 750, y: 50, width: 30, height: 30}
+            },
+            // Уровень 2 - с шипами (оставляем как есть)
+            {
+                platforms: [
+                    {x: 0, y: this.height - 50, width: 300, height: 50},
+                    {x: 400, y: this.height - 50, width: 400, height: 50},
+                    {x: 100, y: 350, width: 150, height: 20},
+                    {x: 300, y: 280, width: 200, height: 20},
+                    {x: 550, y: 220, width: 150, height: 20},
+                    {x: 200, y: 150, width: 100, height: 20},
+                    {x: 450, y: 120, width: 120, height: 20},
+                    {x: 650, y: 80, width: 100, height: 20}
+                ],
+                coins: [
+                    {x: 150, y: 300, width: 15, height: 15, collected: false},
+                    {x: 350, y: 230, width: 15, height: 15, collected: false},
+                    {x: 600, y: 170, width: 15, height: 15, collected: false},
+                    {x: 250, y: 100, width: 15, height: 15, collected: false},
+                    {x: 500, y: 70, width: 15, height: 15, collected: false}
+                ],
+                spikes: [
+                    {x: 300, y: this.height - 70, width: 100, height: 20},
+                    {x: 650, y: 250, width: 40, height: 20},
+                    {x: 200, y: 130, width: 60, height: 20}
+                ],
+                lava: [],
+                goal: {x: 700, y: 30, width: 30, height: 30}
+            },
+            // Уровень 3 - с лавой (оставляем как есть)
+            {
+                platforms: [
+                    {x: 0, y: this.height - 50, width: 200, height: 50},
+                    {x: 300, y: this.height - 50, width: 200, height: 50},
+                    {x: 600, y: this.height - 50, width: 200, height: 50},
+                    {x: 150, y: 320, width: 100, height: 20},
+                    {x: 350, y: 270, width: 120, height: 20},
+                    {x: 550, y: 220, width: 100, height: 20},
+                    {x: 200, y: 170, width: 80, height: 20},
+                    {x: 400, y: 120, width: 150, height: 20},
+                    {x: 650, y: 70, width: 100, height: 20}
+                ],
+                coins: [
+                    {x: 180, y: 270, width: 15, height: 15, collected: false},
+                    {x: 380, y: 220, width: 15, height: 15, collected: false},
+                    {x: 580, y: 170, width: 15, height: 15, collected: false},
+                    {x: 230, y: 120, width: 15, height: 15, collected: false},
+                    {x: 450, y: 70, width: 15, height: 15, collected: false}
+                ],
+                spikes: [
+                    {x: 250, y: 320, width: 50, height: 20},
+                    {x: 500, y: 220, width: 50, height: 20}
+                ],
+                lava: [
+                    {x: 200, y: this.height - 30, width: 100, height: 30},
+                    {x: 500, y: this.height - 30, width: 100, height: 30}
+                ],
+                goal: {x: 680, y: 20, width: 30, height: 30}
+            },
+            // Уровень 4 - упрощенный (переделан)
+            {
+                platforms: [
+                    {x: 0, y: this.height - 50, width: 150, height: 50},
+                    {x: 200, y: this.height - 50, width: 200, height: 50},
+                    {x: 450, y: this.height - 50, width: 200, height: 50},
+                    {x: 700, y: this.height - 50, width: 100, height: 50},
+                    {x: 100, y: 350, width: 120, height: 20},
+                    {x: 300, y: 300, width: 150, height: 20},
+                    {x: 500, y: 250, width: 120, height: 20},
+                    {x: 200, y: 200, width: 100, height: 20},
+                    {x: 400, y: 150, width: 150, height: 20},
+                    {x: 600, y: 100, width: 100, height: 20}
+                ],
+                coins: [
+                    {x: 150, y: 300, width: 15, height: 15, collected: false},
+                    {x: 350, y: 250, width: 15, height: 15, collected: false},
+                    {x: 550, y: 200, width: 15, height: 15, collected: false},
+                    {x: 250, y: 150, width: 15, height: 15, collected: false},
+                    {x: 450, y: 100, width: 15, height: 15, collected: false}
+                ],
+                spikes: [
+                    {x: 150, y: this.height - 70, width: 50, height: 20},
+                    {x: 450, y: this.height - 70, width: 50, height: 20}
+                ],
+                lava: [
+                    {x: 650, y: this.height - 30, width: 50, height: 30}
+                ],
+                goal: {x: 750, y: 20, width: 30, height: 30}
+            },
+            // Уровень 5 - мосты и пропасти
+            {
+                platforms: [
+                    {x: 0, y: this.height - 50, width: 100, height: 50},
+                    {x: 150, y: this.height - 50, width: 100, height: 50},
+                    {x: 300, y: this.height - 50, width: 100, height: 50},
+                    {x: 450, y: this.height - 50, width: 100, height: 50},
+                    {x: 600, y: this.height - 50, width: 100, height: 50},
+                    {x: 750, y: this.height - 50, width: 50, height: 50},
+                    // Верхние платформы
+                    {x: 50, y: 300, width: 100, height: 20},
+                    {x: 200, y: 250, width: 100, height: 20},
+                    {x: 350, y: 300, width: 100, height: 20},
+                    {x: 500, y: 250, width: 100, height: 20},
+                    {x: 650, y: 300, width: 100, height: 20},
+                    // Средние платформы
+                    {x: 100, y: 200, width: 80, height: 20},
+                    {x: 250, y: 150, width: 80, height: 20},
+                    {x: 400, y: 200, width: 80, height: 20},
+                    {x: 550, y: 150, width: 80, height: 20},
+                    {x: 700, y: 200, width: 80, height: 20}
+                ],
+                coins: [
+                    {x: 100, y: 250, width: 15, height: 15, collected: false},
+                    {x: 250, y: 200, width: 15, height: 15, collected: false},
+                    {x: 400, y: 250, width: 15, height: 15, collected: false},
+                    {x: 550, y: 200, width: 15, height: 15, collected: false},
+                    {x: 700, y: 250, width: 15, height: 15, collected: false},
+                    {x: 150, y: 150, width: 15, height: 15, collected: false},
+                    {x: 300, y: 100, width: 15, height: 15, collected: false},
+                    {x: 450, y: 150, width: 15, height: 15, collected: false},
+                    {x: 600, y: 100, width: 15, height: 15, collected: false}
+                ],
+                spikes: [
+                    {x: 100, y: this.height - 70, width: 50, height: 20},
+                    {x: 250, y: this.height - 70, width: 50, height: 20},
+                    {x: 400, y: this.height - 70, width: 50, height: 20},
+                    {x: 550, y: this.height - 70, width: 50, height: 20}
+                ],
+                lava: [
+                    {x: 700, y: this.height - 30, width: 50, height: 30}
+                ],
+                goal: {x: 770, y: 10, width: 30, height: 30}
+            },
+            // Уровень 6 - зигзаг
+            {
+                platforms: [
+                    // Основа
+                    {x: 0, y: this.height - 50, width: 100, height: 50},
+                    {x: 700, y: this.height - 50, width: 100, height: 50},
+                    // Зигзагообразный путь
+                    {x: 100, y: 350, width: 80, height: 20},
+                    {x: 220, y: 320, width: 80, height: 20},
+                    {x: 340, y: 350, width: 80, height: 20},
+                    {x: 460, y: 320, width: 80, height: 20},
+                    {x: 580, y: 350, width: 80, height: 20},
+                    {x: 700, y: 320, width: 80, height: 20},
+                    // Второй ряд
+                    {x: 150, y: 250, width: 80, height: 20},
+                    {x: 270, y: 220, width: 80, height: 20},
+                    {x: 390, y: 250, width: 80, height: 20},
+                    {x: 510, y: 220, width: 80, height: 20},
+                    {x: 630, y: 250, width: 80, height: 20},
+                    // Третий ряд
+                    {x: 200, y: 150, width: 80, height: 20},
+                    {x: 320, y: 120, width: 80, height: 20},
+                    {x: 440, y: 150, width: 80, height: 20},
+                    {x: 560, y: 120, width: 80, height: 20}
+                ],
+                coins: [
+                    {x: 140, y: 300, width: 15, height: 15, collected: false},
+                    {x: 260, y: 270, width: 15, height: 15, collected: false},
+                    {x: 380, y: 300, width: 15, height: 15, collected: false},
+                    {x: 500, y: 270, width: 15, height: 15, collected: false},
+                    {x: 620, y: 300, width: 15, height: 15, collected: false},
+                    {x: 190, y: 200, width: 15, height: 15, collected: false},
+                    {x: 310, y: 170, width: 15, height: 15, collected: false},
+                    {x: 430, y: 200, width: 15, height: 15, collected: false},
+                    {x: 550, y: 170, width: 15, height: 15, collected: false},
+                    {x: 670, y: 200, width: 15, height: 15, collected: false}
+                ],
+                spikes: [
+                    {x: 180, y: 370, width: 40, height: 20},
+                    {x: 420, y: 370, width: 40, height: 20},
+                    {x: 660, y: 370, width: 40, height: 20}
+                ],
+                lava: [
+                    {x: 300, y: this.height - 30, width: 200, height: 30},
+                    {x: 600, y: this.height - 30, width: 100, height: 30}
+                ],
+                goal: {x: 600, y: 70, width: 30, height: 30}
+            },
+            // Уровень 7 - финальный вызов
+            {
+                platforms: [
+                    // Надежное основание
+                    {x: 0, y: this.height - 50, width: 150, height: 50},
+                    {x: 650, y: this.height - 50, width: 150, height: 50},
+                    // Основной путь
+                    {x: 200, y: 350, width: 100, height: 20},
+                    {x: 350, y: 300, width: 100, height: 20},
+                    {x: 500, y: 350, width: 100, height: 20},
+                    {x: 650, y: 300, width: 100, height: 20},
+                    // Платформы для маневра
+                    {x: 100, y: 280, width: 80, height: 20},
+                    {x: 250, y: 230, width: 80, height: 20},
+                    {x: 400, y: 280, width: 80, height: 20},
+                    {x: 550, y: 230, width: 80, height: 20},
+                    {x: 700, y: 280, width: 80, height: 20},
+                    // Верхний уровень
+                    {x: 150, y: 180, width: 70, height: 20},
+                    {x: 300, y: 130, width: 70, height: 20},
+                    {x: 450, y: 180, width: 70, height: 20},
+                    {x: 600, y: 130, width: 70, height: 20},
+                    // Платформа к цели
+                    {x: 700, y: 80, width: 100, height: 20}
+                ],
+                coins: [
+                    {x: 250, y: 300, width: 15, height: 15, collected: false},
+                    {x: 400, y: 250, width: 15, height: 15, collected: false},
+                    {x: 550, y: 300, width: 15, height: 15, collected: false},
+                    {x: 700, y: 250, width: 15, height: 15, collected: false},
+                    {x: 190, y: 230, width: 15, height: 15, collected: false},
+                    {x: 340, y: 180, width: 15, height: 15, collected: false},
+                    {x: 490, y: 230, width: 15, height: 15, collected: false},
+                    {x: 640, y: 180, width: 15, height: 15, collected: false},
+                    {x: 185, y: 130, width: 15, height: 15, collected: false},
+                    {x: 335, y: 80, width: 15, height: 15, collected: false},
+                    {x: 485, y: 130, width: 15, height: 15, collected: false},
+                    {x: 635, y: 80, width: 15, height: 15, collected: false}
+                ],
+                spikes: [
+                    {x: 300, y: this.height - 70, width: 100, height: 20},
+                    {x: 500, y: this.height - 70, width: 100, height: 20},
+                    {x: 450, y: 330, width: 50, height: 20},
+                    {x: 200, y: 210, width: 50, height: 20},
+                    {x: 600, y: 210, width: 50, height: 20}
+                ],
+                lava: [
+                    {x: 150, y: this.height - 30, width: 150, height: 30},
+                    {x: 450, y: this.height - 30, width: 200, height: 30},
+                    {x: 350, y: 250, width: 50, height: 20},
+                    {x: 550, y: 180, width: 50, height: 20}
+                ],
+                goal: {x: 750, y: 30, width: 30, height: 30}
+            }
+        ];
+    }
+
+    loadLevel(levelIndex) {
+        // Проверяем, что уровень существует
+        if (levelIndex >= this.levels.length) {
+            this.winGame();
+            return;
+        }
+        
+        const level = this.levels[levelIndex];
+        
+        this.platforms = level.platforms.map(p => new Platform(p.x, p.y, p.width, p.height));
+        this.coins = JSON.parse(JSON.stringify(level.coins)); // глубокое копирование
+        this.spikes = level.spikes.map(s => new Spike(s.x, s.y, s.width, s.height));
+        this.lava = level.lava.map(l => new Lava(l.x, l.y, l.width, l.height));
+        this.goal = level.goal;
+        this.levelCompleted = false;
+        
+        // Сброс позиции игрока - безопасная стартовая позиция
+        this.player.reset(50, this.height - 100);
+    }
+
+    // ... остальные методы остаются без изменений ...
+    start() {
+        this.isRunning = true;
+        this.isPaused = false;
+    }
+
+    togglePause() {
+        this.isPaused = !this.isPaused;
+    }
+
+    restart() {
+        this.isRunning = true;
+        this.isPaused = false;
+        this.isGameOver = false;
+        this.score = 0;
+        this.level = 1;
+        this.lives = this.maxLives;
         this.loadLevel(this.level - 1);
     }
 
@@ -64,205 +362,12 @@ class Game {
         }
     }
 
-    createLevels() {
-        return [
-            // Уровень 1 - обучающий
-            {
-                platforms: [
-                    {x: 0, y: this.height - 50, width: this.width, height: 50},
-                    {x: 100, y: 350, width: 200, height: 20},
-                    {x: 350, y: 250, width: 150, height: 20},
-                    {x: 600, y: 300, width: 180, height: 20},
-                    {x: 200, y: 150, width: 120, height: 20},
-                    {x: 500, y: 100, width: 200, height: 20}
-                ],
-                coins: [
-                    {x: 150, y: 300, width: 15, height: 15, collected: false},
-                    {x: 400, y: 200, width: 15, height: 15, collected: false},
-                    {x: 650, y: 250, width: 15, height: 15, collected: false},
-                    {x: 250, y: 100, width: 15, height: 15, collected: false},
-                    {x: 550, y: 50, width: 15, height: 15, collected: false}
-                ],
-                spikes: [],
-                lava: [],
-                goal: {x: 750, y: 50, width: 30, height: 30}
-            },
-            // Уровень 2 - с шипами
-            {
-                platforms: [
-                    {x: 0, y: this.height - 50, width: 300, height: 50},
-                    {x: 400, y: this.height - 50, width: 400, height: 50},
-                    {x: 100, y: 350, width: 150, height: 20},
-                    {x: 300, y: 280, width: 200, height: 20},
-                    {x: 550, y: 220, width: 150, height: 20},
-                    {x: 200, y: 150, width: 100, height: 20},
-                    {x: 450, y: 120, width: 120, height: 20},
-                    {x: 650, y: 80, width: 100, height: 20}
-                ],
-                coins: [
-                    {x: 150, y: 300, width: 15, height: 15, collected: false},
-                    {x: 350, y: 230, width: 15, height: 15, collected: false},
-                    {x: 600, y: 170, width: 15, height: 15, collected: false},
-                    {x: 250, y: 100, width: 15, height: 15, collected: false},
-                    {x: 500, y: 70, width: 15, height: 15, collected: false}
-                ],
-                spikes: [
-                    {x: 300, y: this.height - 70, width: 100, height: 20},
-                    {x: 650, y: 250, width: 40, height: 20},
-                    {x: 200, y: 130, width: 60, height: 20}
-                ],
-                lava: [],
-                goal: {x: 700, y: 30, width: 30, height: 30}
-            },
-            // Уровень 3 - с лавой
-            {
-                platforms: [
-                    {x: 0, y: this.height - 50, width: 200, height: 50},
-                    {x: 300, y: this.height - 50, width: 200, height: 50},
-                    {x: 600, y: this.height - 50, width: 200, height: 50},
-                    {x: 150, y: 320, width: 100, height: 20},
-                    {x: 350, y: 270, width: 120, height: 20},
-                    {x: 550, y: 220, width: 100, height: 20},
-                    {x: 200, y: 170, width: 80, height: 20},
-                    {x: 400, y: 120, width: 150, height: 20},
-                    {x: 650, y: 70, width: 100, height: 20}
-                ],
-                coins: [
-                    {x: 180, y: 270, width: 15, height: 15, collected: false},
-                    {x: 380, y: 220, width: 15, height: 15, collected: false},
-                    {x: 580, y: 170, width: 15, height: 15, collected: false},
-                    {x: 230, y: 120, width: 15, height: 15, collected: false},
-                    {x: 450, y: 70, width: 15, height: 15, collected: false}
-                ],
-                spikes: [
-                    {x: 250, y: 320, width: 50, height: 20},
-                    {x: 500, y: 220, width: 50, height: 20}
-                ],
-                lava: [
-                    {x: 200, y: this.height - 30, width: 100, height: 30},
-                    {x: 500, y: this.height - 30, width: 100, height: 30}
-                ],
-                goal: {x: 680, y: 20, width: 30, height: 30}
-            },
-            // Уровень 4 - сложный
-            {
-                platforms: [
-                    {x: 0, y: this.height - 50, width: 150, height: 50},
-                    {x: 250, y: this.height - 50, width: 150, height: 50},
-                    {x: 500, y: this.height - 50, width: 150, height: 50},
-                    {x: 100, y: 350, width: 80, height: 20},
-                    {x: 250, y: 300, width: 100, height: 20},
-                    {x: 450, y: 250, width: 80, height: 20},
-                    {x: 600, y: 200, width: 120, height: 20},
-                    {x: 150, y: 180, width: 70, height: 20},
-                    {x: 350, y: 130, width: 90, height: 20},
-                    {x: 550, y: 80, width: 110, height: 20}
-                ],
-                coins: [
-                    {x: 130, y: 300, width: 15, height: 15, collected: false},
-                    {x: 280, y: 250, width: 15, height: 15, collected: false},
-                    {x: 480, y: 200, width: 15, height: 15, collected: false},
-                    {x: 630, y: 150, width: 15, height: 15, collected: false},
-                    {x: 180, y: 130, width: 15, height: 15, collected: false},
-                    {x: 380, y: 80, width: 15, height: 15, collected: false},
-                    {x: 580, y: 30, width: 15, height: 15, collected: false}
-                ],
-                spikes: [
-                    {x: 150, y: this.height - 70, width: 100, height: 20},
-                    {x: 400, y: this.height - 70, width: 100, height: 20},
-                    {x: 300, y: 280, width: 40, height: 20},
-                    {x: 500, y: 230, width: 40, height: 20},
-                    {x: 200, y: 160, width: 40, height: 20}
-                ],
-                lava: [
-                    {x: 650, y: this.height - 30, width: 150, height: 30},
-                    {x: 400, y: 110, width: 80, height: 20}
-                ],
-                goal: {x: 620, y: 30, width: 30, height: 30}
-            }
-        ];
-    }
-
-    loadLevel(levelIndex) {
-        const level = this.levels[levelIndex];
-        
-        this.platforms = level.platforms.map(p => new Platform(p.x, p.y, p.width, p.height));
-        this.coins = level.coins;
-        this.spikes = level.spikes.map(s => new Spike(s.x, s.y, s.width, s.height));
-        this.lava = level.lava.map(l => new Lava(l.x, l.y, l.width, l.height));
-        this.goal = level.goal;
-        this.levelCompleted = false;
-        
-        // Сброс позиции игрока
-        this.player.reset(50, this.height - 100);
-    }
-
-    start() {
-        this.isRunning = true;
-        this.isPaused = false;
-    }
-
-    togglePause() {
-        this.isPaused = !this.isPaused;
-    }
-
-    restart() {
-        this.isRunning = true;
-        this.isPaused = false;
-        this.isGameOver = false;
-        this.score = 0;
-        this.level = 1;
-        this.lives = this.maxLives;
-        this.loadLevel(this.level - 1);
-    }
-
-    update() {
-        if (this.isGameOver || this.levelCompleted) return;
-
-        // Обновление лавы (анимация)
-        this.lava.forEach(lava => lava.update());
-
-        this.player.update(this.platforms, this.width, this.height);
-        
-        // Проверка сбора монет
-        this.coins.forEach(coin => {
-            if (!coin.collected && Collision.checkRectRect(this.player, coin)) {
-                coin.collected = true;
-                this.score += 100;
-            }
-        });
-
-        // Проверка столкновения с шипами
-        this.spikes.forEach(spike => {
-            if (Collision.checkRectRect(this.player, spike)) {
-                this.takeDamage();
-            }
-        });
-
-        // Проверка столкновения с лавой
-        this.lava.forEach(lava => {
-            if (Collision.checkRectRect(this.player, lava)) {
-                this.takeDamage();
-            }
-        });
-
-        // Проверка достижения цели
-        if (Collision.checkRectRect(this.player, this.goal)) {
-            this.completeLevel();
-        }
-
-        // Проверка падения в пропасть
-        if (this.player.y > this.height) {
-            this.takeDamage();
-        }
-    }
-
     takeDamage() {
         this.lives--;
         if (this.lives <= 0) {
             this.gameOver();
         } else {
-            // Респавн игрока
+            // Респавн игрока на безопасной позиции
             this.player.reset(50, this.height - 100);
             this.player.velocityY = 0;
         }
