@@ -9,7 +9,7 @@ class Renderer {
         // Очистка canvas
         this.ctx.clearRect(0, 0, this.width, this.height);
         
-        // Рендер фона
+        // Рендер фона в зависимости от уровня
         this.renderBackground(game.level);
         
         // Рендер платформ
@@ -43,7 +43,10 @@ class Renderer {
             ['#87CEEB', '#98FB98'], // Уровень 1 - небо/трава
             ['#4682B4', '#32CD32'], // Уровень 2 - океан/зелень
             ['#2F4F4F', '#8FBC8F'], // Уровень 3 - темный/светлый лес
-            ['#4B0082', '#FF4500']  // Уровень 4 - фиолетовый/оранжевый
+            ['#4B0082', '#DA70D6'], // Уровень 4 - фиолетовый/орхидея
+            ['#FF4500', '#FFD700'], // Уровень 5 - оранжевый/золотой
+            ['#00CED1', '#FF69B4'], // Уровень 6 - бирюзовый/розовый
+            ['#8B0000', '#FFA500']  // Уровень 7 - темно-красный/оранжевый
         ];
         
         const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
@@ -54,13 +57,27 @@ class Renderer {
         this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, this.width, this.height);
         
-        // Облака
-        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-        this.drawCloud(100, 50, 60, 30);
-        this.drawCloud(300, 80, 80, 35);
-        this.drawCloud(600, 60, 70, 32);
+        // Облака для первых уровней
+        if (level <= 3) {
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            this.drawCloud(100, 50, 60, 30);
+            this.drawCloud(300, 80, 80, 35);
+            this.drawCloud(600, 60, 70, 32);
+        }
+        
+        // Звезды для ночных уровней
+        if (level >= 4) {
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            for (let i = 0; i < 20; i++) {
+                const x = Math.random() * this.width;
+                const y = Math.random() * 200;
+                const size = Math.random() * 2 + 1;
+                this.ctx.fillRect(x, y, size, size);
+            }
+        }
     }
 
+    // ... остальные методы без изменений ...
     drawCloud(x, y, width, height) {
         this.ctx.beginPath();
         this.ctx.arc(x, y, height * 0.5, 0, Math.PI * 2);
@@ -153,20 +170,11 @@ class Renderer {
         }
 
         ctx.restore();
-        
-        // Отладочная отрисовка хитбокса (можно убрать)
-        // this.drawHitbox(player.hitbox);
-    }
-
-    drawHitbox(hitbox) {
-        this.ctx.strokeStyle = 'red';
-        this.ctx.lineWidth = 1;
-        this.ctx.strokeRect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
     }
 
     drawIdlePlayer(x, y, width, height, bodyColor, darkColor, lightColor) {
         const ctx = this.ctx;
-        const pixelSize = 5; // Размер "пикселя" для pixel art стиля
+        const pixelSize = 5;
         
         // Тело (основной прямоугольник)
         ctx.fillStyle = bodyColor;
@@ -199,7 +207,7 @@ class Renderer {
     drawWalkingPlayer(x, y, width, height, bodyColor, darkColor, lightColor, frame) {
         const ctx = this.ctx;
         const pixelSize = 5;
-        const walkOffset = Math.sin(frame * Math.PI) * 2; // Анимация ходьбы
+        const walkOffset = Math.sin(frame * Math.PI) * 2;
         
         // Тело
         ctx.fillStyle = bodyColor;
@@ -232,7 +240,7 @@ class Renderer {
     drawJumpingPlayer(x, y, width, height, bodyColor, darkColor, lightColor, frame) {
         const ctx = this.ctx;
         const pixelSize = 5;
-        const jumpStretch = Math.min(frame * 0.5, 1.5); // Растяжение при прыжке
+        const jumpStretch = Math.min(frame * 0.5, 1.5);
         
         // Тело (немного растянутое)
         ctx.fillStyle = bodyColor;
@@ -260,28 +268,6 @@ class Renderer {
         // Рот (открыт от удивления)
         ctx.fillStyle = '#2c3e50';
         ctx.fillRect(x + pixelSize * 4, y + pixelSize * 4 - jumpStretch, pixelSize * 2, pixelSize);
-    }
-
-    darkenColor(color, amount) {
-        // Упрощенное затемнение цвета для pixel art
-        const colors = {
-            '#e74c3c': '#c0392b', // Красный
-            '#3498db': '#2980b9', // Синий
-            '#2ecc71': '#27ae60', // Зеленый
-            '#f1c40f': '#f39c12'  // Желтый
-        };
-        return colors[color] || color;
-    }
-
-    lightenColor(color, amount) {
-        // Упрощенное осветление цвета для pixel art
-        const colors = {
-            '#e74c3c': '#ec7063', // Красный
-            '#3498db': '#5dade2', // Синий
-            '#2ecc71': '#58d68d', // Зеленый
-            '#f1c40f': '#f7dc6f'  // Желтый
-        };
-        return colors[color] || color;
     }
 
     renderCoin(coin) {
@@ -340,7 +326,7 @@ class Renderer {
             return this;
         };
         
-        ctx.roundRect(15, 15, 250, 100, 15).fill();
+        ctx.roundRect(15, 15, 280, 100, 15).fill();
         
         // Текст статистики
         ctx.fillStyle = 'white';
@@ -358,7 +344,7 @@ class Renderer {
         ctx.fillStyle = '#54a0ff';
         ctx.fillText('УРОВЕНЬ', 125, 45);
         ctx.fillStyle = 'white';
-        ctx.fillText(game.level.toString(), 125, 70);
+        ctx.fillText(`${game.level}/${game.levels.length}`, 125, 70);
         
         // Жизни
         ctx.fillStyle = '#ff6b6b';
@@ -437,9 +423,29 @@ class Renderer {
             this.ctx.textAlign = 'center';
             this.ctx.fillText('ПОБЕДА!', this.width / 2, this.height / 2 - 50);
             this.ctx.font = '24px Arial';
-            this.ctx.fillText(`Вы прошли все уровни!`, this.width / 2, this.height / 2);
+            this.ctx.fillText(`Вы прошли все ${game.levels.length} уровней!`, this.width / 2, this.height / 2);
             this.ctx.fillText(`Финальный счет: ${game.score}`, this.width / 2, this.height / 2 + 50);
             this.ctx.textAlign = 'left';
         }
+    }
+
+    darkenColor(color, amount) {
+        const colors = {
+            '#e74c3c': '#c0392b',
+            '#3498db': '#2980b9',
+            '#2ecc71': '#27ae60',
+            '#f1c40f': '#f39c12'
+        };
+        return colors[color] || color;
+    }
+
+    lightenColor(color, amount) {
+        const colors = {
+            '#e74c3c': '#ec7063',
+            '#3498db': '#5dade2',
+            '#2ecc71': '#58d68d',
+            '#f1c40f': '#f7dc6f'
+        };
+        return colors[color] || color;
     }
 }
